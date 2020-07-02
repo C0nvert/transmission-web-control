@@ -37,7 +37,7 @@ In this guide, we will demonstrate how to install Transmission Web Control on a 
 2.	Download the latest script on Github.com.
 
 ```
-wget https://github.com/ronggang/transmission-web-control/raw/master/release/install-tr-control.sh --no-check-certificate
+wget https://github.com/C0nvert/transmission-web-control/raw/master/release/install-tr-control.sh --no-check-certificate
 ```
 
 3.	Bash the scipt. 
