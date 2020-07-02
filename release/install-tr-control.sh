@@ -1,5 +1,4 @@
 #!/bin/bash
-# 获取第一个参数
 ARG1="$1"
 ROOT_FOLDER=""
 SCRIPT_NAME="$0"
@@ -10,13 +9,8 @@ ORG_INDEX_FILE="index.original.html"
 INDEX_FILE="index.html"
 TMP_FOLDER="/tmp/tr-web-control"
 PACK_NAME="master.tar.gz"
-WEB_HOST="https://github.com/ronggang/transmission-web-control/archive/"
+WEB_HOST="https://github.com/C0nvert/transmission-web-control/archive/"
 DOWNLOAD_URL="$WEB_HOST$PACK_NAME"
-# 安装类型
-# 1 安装至当前 Transmission Web 所在目录
-# 2 安装至 TRANSMISSION_WEB_HOME 环境变量指定的目录，参考：https://github.com/transmission/transmission/wiki/Environment-Variables#transmission-specific-variables
-# 使用环境变量时，如果 transmission 不是当前用户运行的，则需要将 TRANSMISSION_WEB_HOME 添加至 /etc/profile 文件，以达到“永久”的目的
-# 3 用户指定参数做为目录，如 sh install-tr-control.sh /usr/local/transmission/share/transmission
 INSTALL_TYPE=-1
 SKIP_SEARCH=0
 AUTOINSTALL=0
@@ -42,13 +36,13 @@ MSG_DOWNLOAD_FAILED="The installation package failed to download. Please try aga
 MSG_INSTALL_COMPLETE="Transmission Web Control Installation Completed!"
 MSG_PACK_EXTRACTING="Extracting installation package..."
 MSG_PACK_CLEANING_UP="Cleaning up the installation package..."
-MSG_DONE="Installation completed. Installation problems see：https://github.com/ronggang/transmission-web-control/wiki "
+MSG_DONE="Installation completed. Installation problems see：https://github.com/C0nvert/transmission-web-control/wiki "
 MSG_SETTING_PERMISSIONS="Setting permissions, It takes about one minute ..."
 MSG_BEGIN="BEGIN"
 MSG_END="END"
 MSG_MAIN_MENU="
 	Welcome to the Transmission Web Control Installation Script.
-	Official help documentation: https://github.com/ronggang/transmission-web-control/wiki 
+	Official help documentation: https://github.com/C0nvert/transmission-web-control/wiki
 	Installation script version: $SCRIPT_VERSION
 
 	1. Install the latest release.
@@ -82,7 +76,7 @@ MSG_INSTALL_SCRIPT_DOWNLOAD_FAILED="Installation Script Download failed!"
 MSG_NON_ROOT_USER="Unable to confirm if it is currently root, the installation may not be possible. Do you want to continue? (y/n)"
 #==========================================================
 
-# 是否自动安装
+
 if [ "$ARG1" = "auto" ]; then
 	AUTOINSTALL=1
 else
@@ -90,7 +84,7 @@ else
 fi
 
 initValues() {
-	# 判断临时目录是否存在，不存在则创建
+
 	if [ ! -d "$TMP_FOLDER" ]; then
 		mkdir -p "$TMP_FOLDER"
 	fi
@@ -98,7 +92,7 @@ initValues() {
 	# 获取 Transmission 目录
 	getTransmissionPath
 
-	# 判断 ROOT_FOLDER 是否为一个有效的目录，如果是则表明传递了一个有效路径
+	# ROOT_FOLDER
 	if [ -d "$ROOT_FOLDER" ]; then
 		showLog "$MSG_TR_WORK_FOLDER $ROOT_FOLDER/web"
 		INSTALL_TYPE=3
@@ -119,9 +113,9 @@ initValues() {
 			PACK_NAME="v$VERSION.tar.gz"
 		fi
 		showLog "$MSG_SPECIFIED_VERSION $VERSION"
-		
-		DOWNLOAD_URL="https://github.com/ronggang/transmission-web-control/archive/$PACK_NAME"
-	fi	
+
+		DOWNLOAD_URL="https://github.com/C0nvert/transmission-web-control/archive/$PACK_NAME"
+	fi
 
 	if [ $SKIP_SEARCH = 0 ]; then
 		# 查找目录
@@ -144,11 +138,11 @@ main() {
 findWebFolder() {
 	# 找出web ui 目录
 	showLog "$MSG_SEARCHING_TR_FOLDER"
-		
+
 	# 判断 TRANSMISSION_WEB_HOME 环境变量是否被定义，如果是，直接用这个变量的值
 	if [ $TRANSMISSION_WEB_HOME ]; then
 		showLog "$MSG_USE_WEB_HOME"
-		# 判断目录是否存在，如果不存在则创建 https://github.com/ronggang/transmission-web-control/issues/167
+		# 判断目录是否存在，如果不存在则创建 https://github.com/C0nvert/transmission-web-control/issues/167
 		if [ ! -d "$TRANSMISSION_WEB_HOME" ]; then
          mkdir -p "$TRANSMISSION_WEB_HOME"
       fi
@@ -194,10 +188,10 @@ install() {
 		download
 		# 创建web文件夹，从 20171014 之后，打包文件不包含web目录，直接打包为src下所有文件
 		mkdir web
-		
+
 		# 解压缩包
 		unpack "web"
-		
+
 		showLog "$MSG_PACK_COPYING"
 		# 复制文件到
 		cp -r web "$ROOT_FOLDER"
@@ -252,7 +246,7 @@ download() {
 	if [ $? -eq 0 ]; then
 		showLog "$MSG_DOWNLOAD_COMPLETE"
 		return 0
-	else 
+	else
 		showLog "$MSG_DOWNLOAD_FAILED"
 		end
 		exit 1
@@ -274,7 +268,7 @@ showLog() {
 		*)
 			echo "<< $TIME >> $1" ;;
 	esac
-	
+
 }
 
 # 解压安装包
@@ -351,7 +345,7 @@ showMainMenu() {
 			read VERSION
 			main
 			;;
-		
+
 		3)
 			revertOriginalUI
 			;;
@@ -376,7 +370,7 @@ showMainMenu() {
 			sleep 2
 			showMainMenu
 			;;
-		
+
 		# 下载最新的代码
 		9)
 			echo -n "$MSG_MASTER_INSTALL_CONFIRM"
@@ -424,7 +418,7 @@ getTransmissionPath() {
 # 获取最后的发布版本号
 # 因在源码库里提交二进制文件不便于管理，以后将使用这种方式获取最新发布的版本
 getLatestReleases() {
-	VERSION=`wget -O - https://api.github.com/repos/ronggang/transmission-web-control/releases/latest | grep tag_name | head -n 1 | cut -d '"' -f 4`
+	VERSION=`wget -O - https://api.github.com/repos/C0nvert/transmission-web-control/releases/latest | grep tag_name | head -n 1 | cut -d '"' -f 4`
 }
 
 # 检测 Transmission 进程是否存在
@@ -477,11 +471,11 @@ downloadInstallScript() {
 		rm "$SCRIPT_NAME"
 	fi
 	showLog "$MSG_DOWNLOADING_INSTALL_SCRIPT"
-	wget "https://github.com/ronggang/transmission-web-control/raw/master/release/$SCRIPT_NAME" --no-check-certificate
+	wget "https://github.com/C0nvert/transmission-web-control/raw/master/release/$SCRIPT_NAME" --no-check-certificate
 	# 判断是否下载成功
 	if [ $? -eq 0 ]; then
 		showLog "$MSG_INSTALL_SCRIPT_DOWNLOAD_COMPLETE"
-	else 
+	else
 		showLog "$MSG_INSTALL_SCRIPT_DOWNLOAD_FAILED"
 		sleep 2
 		showMainMenu
